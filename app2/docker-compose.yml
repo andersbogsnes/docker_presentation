@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    build: ./web
+    ports:
+      - 8000:8000
+    depends_on: 
+      - postgres_db
+  postgres_db:
+    build: ./db
+    ports:
+      - 2000:5432

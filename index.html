@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Docker from Scratch</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="css/zenburn.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<section>Docker From Scratch</section>
+			<section>
+				<section>
+					Vores første Docker kommando
+					<pre><code data-trim data-noescape class="fragment">
+								docker run docker/whalesay cowsay "Hello World"
+							</code></pre>
+				</section>
+
+				<section>
+					<p>Lidt mere relevant hello world</p>
+					<pre class="fragment"><code data-trim data-noescape>
+								docker run python python -c "print('hello world')"
+							</code></pre>
+				</section>
+			</section>
+			<section>
+				<section>Lidt sjovere</section>
+				<section>
+					<p>Kør en postgres server!</p>
+					<pre class="fragment"><code data-trim data-noescape>
+						docker run -d -p 3000:5432 postgres
+					</code></pre>
+					<pre class="fragment"><code data-trim data-noescape>
+						psql -U postgres -h 0.0.0.0 -p 3000
+					</code></pre>
+
+				</section>
+
+				<section>
+					<p>Kør en nginx server!</p>
+					<pre class="fragment"><code data-trim data-noescape>
+						docker run -d -p 3000:80 nginx
+					</code></pre>
+					<pre class="fragment"><code data-trim data-noescape>
+						docker exec -it "container-id" /bin/bash
+					</code></pre>
+
+				</section>
+			</section>
+			
+			<section>
+				<section>
+					<p>Dockerfiles</p>
+					<p class="fragment">Definer din egen computer!</p>
+				</section>
+
+				<section>
+					<pre><code data-trim data-noescape>
+						FROM python
+						LABEL maintainer="abanbn@almbrand.dk"
+						
+						EXPOSE 8000
+						RUN mkdir /app
+						WORKDIR /app
+						COPY requirements.txt /app/requirements.txt
+						RUN pip install -r requirements.txt
+						COPY . .
+						CMD ["python", "app.py"]
+					</code></pre>
+				</section>
+			</section>
+			
+			<section>
+				<section>
+				<p>Docker-compose!</p>
+				<p class="fragment">Styr alle dine tjenester</p>
+			</section>
+
+			<section>
+				<pre><code data-trim data-noescape>
+				version: '3'
+				services:
+			    web:
+				    build: ./web
+				    ports:
+				      - 8000:8000
+				    depends_on: 
+				      - postgres_db
+			    postgres_db:
+				    build: ./db
+				    ports:
+				      - 2000:5432
+				</code></pre>
+			</section>
+		</section>
+		</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [{
+					src: 'plugin/highlight/highlight.js',
+					async: true,
+					callback: function () {
+						hljs.initHighlightingOnLoad();
+					}
+				}
+			]
+		});
+	</script>
+</body>
+
+</html>
